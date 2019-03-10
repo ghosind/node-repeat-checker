@@ -1,0 +1,25 @@
+{
+  "name": "repeat-checker",
+  "version": "0.0.1",
+  "description": "A simple and light repeat operation checker.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghosind/node-repeat-checker.git"
+  },
+  "keywords": [
+    "repeat"
+  ],
+  "author": "Chen Su",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ghosind/node-repeat-checker/issues"
+  },
+  "homepage": "https://github.com/ghosind/node-repeat-checker#readme",
+  "dependencies": {
+    "mocha": "^6.0.2"
+  }
+}
