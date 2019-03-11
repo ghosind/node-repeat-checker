@@ -2,9 +2,9 @@ const sStore = Symbol('Store');
 const sClearTimer = Symbol('clearTimer');
 const sClearTime = Symbol('clearTime');
 
-class Check {
+class Checker {
   constructor(options) {
-    this[sClearTime] = options.clearTime || 60000;
+    this[sClearTime] = (options && options.clearTime) || 60000;
     this[sStore] = [];
     this[sClearTimer] = null;
   }
@@ -25,11 +25,12 @@ class Check {
 
     if (!this[sClearTimer]) {
       this[sClearTimer] = setTimeout(() => {
+        // remove expired items.
         if (this[sStore].length > 0) {
           this[sStore] = this[sStore].filter(x => x.expire > Date.now());
         } else {
-          clearTimeout(this[sClearTime]);
-          this[sClearTime] = null;
+          clearTimeout(this[sClearTimer]);
+          this[sClearTimer] = null;
         }
       }, this[sClearTime]);
     }
@@ -38,4 +39,4 @@ class Check {
   }
 }
 
-module.exports = new Check();
+module.exports = Checker;

@@ -1,10 +1,13 @@
-const checker = require('../index');
 const assert = require('assert');
+
+const Checker = require('../index');
+
+const checker = new Checker();
 
 describe('Repeat Checker', () => {
   describe('set key1 once', () => {
     it('should return true', () => {
-      let result = checker.checkAndSet('key1', 10000);
+      const result = checker.checkAndSet('key1', 10000);
       assert.equal(result, true);
     });
   });
@@ -32,12 +35,12 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key5 twice between 1s and ttl is 1.5s', () => {
-    it('shold return true and false', done => {
+    it('shold return true and false', (done) => {
       let result = checker.checkAndSet('key5', 1500);
       assert.equal(result, true);
 
       setTimeout(() => {
-        let result = checker.checkAndSet('key5', 1500);
+        result = checker.checkAndSet('key5', 1500);
         assert.equal(result, false);
         done();
       }, 1000);
@@ -45,12 +48,12 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key6 twice between 1s and ttl is 0.5s', () => {
-    it('shold both return true', done => {
+    it('shold both return true', (done) => {
       let result = checker.checkAndSet('key6', 500);
       assert.equal(result, true);
 
       setTimeout(() => {
-        let result = checker.checkAndSet('key6', 500);
+        result = checker.checkAndSet('key6', 500);
         assert.equal(result, true);
         done();
       }, 1000);
