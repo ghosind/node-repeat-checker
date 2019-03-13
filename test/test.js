@@ -2,12 +2,36 @@ const assert = require('assert');
 
 const Checker = require('../index');
 
-const checker = new Checker();
+const checker = new Checker({ clearTime: 1000 });
 
 describe('Repeat Checker', () => {
+  describe('pass an empty key', () => {
+    it('should throw TypeError', () => {
+      let errored = 0;
+      try {
+        checker.checkAndSet('', 1000);
+      } catch (err) {
+        errored = 1;
+      }
+      assert.equal(errored, 1);
+    });
+  });
+
+  describe('pass an negative ttl', () => {
+    it('should throw TypeError', () => {
+      let errored = 0;
+      try {
+        checker.checkAndSet('ttl', -1);
+      } catch (err) {
+        errored = 1;
+      }
+      assert.equal(errored, 1);
+    });
+  });
+
   describe('set key1 once', () => {
     it('should return true', () => {
-      const result = checker.checkAndSet('key1', 10000);
+      const result = checker.checkAndSet('key1', 1000);
       assert.equal(result, true);
     });
   });
@@ -15,21 +39,21 @@ describe('Repeat Checker', () => {
   describe('set key2 twice', () => {
     it('shold return true and false', () => {
       // set first time
-      let result = checker.checkAndSet('key2', 10000);
+      let result = checker.checkAndSet('key2', 1000);
       assert.equal(result, true);
 
       // set second time
-      result = checker.checkAndSet('key2', 10000);
+      result = checker.checkAndSet('key2', 1000);
       assert.equal(result, false);
     });
   });
 
   describe('set key3 and key 4 once', () => {
     it('shold both return true', () => {
-      let result = checker.checkAndSet('key3', 10000);
+      let result = checker.checkAndSet('key3', 1000);
       assert.equal(result, true);
 
-      result = checker.checkAndSet('key4', 10000);
+      result = checker.checkAndSet('key4', 1000);
       assert.equal(result, true);
     });
   });
