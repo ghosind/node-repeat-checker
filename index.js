@@ -18,8 +18,10 @@ class Checker {
    * check key exist status, if not, set the key with ttl.
    * @param {String} key item key
    * @param {Number} ttl item ttl
+   * @param {Object} options options
+   * @param {Number} options.maxCount max number of use count
    */
-  checkAndSet(key, ttl) {
+  checkAndSet(key, ttl, options) {
     if (!key || typeof key !== 'string' || key.length <= 0) {
       throw new TypeError('key was not string or key was empty');
     }
@@ -33,13 +35,26 @@ class Checker {
 
     // item is exist and it is not expired
     if (item && item.expire > Date.now()) {
+      if (item.maxCount > 0) {
+        item.count += 1;
+        return item.count < item.maxCount;
+      }
+
       return false;
     }
 
-    this[sStore].push({
-      key,
-      expire: Date.now() + ttl,
-    });
+    if (!item) {
+      this[sStore].push({
+        key,
+        expire: Date.now() + ttl,
+        count: 1,
+        maxCount: options && options.maxCount,
+      });
+    } else {
+      item.expire = Date.now() + ttl;
+      item.count = 1;
+      item.maxCount = options && options.maxCount;
+    }
 
     if (!this[sClearTimer]) {
       this[sClearTimer] = setInterval(() => {

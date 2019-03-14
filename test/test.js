@@ -83,4 +83,17 @@ describe('Repeat Checker', () => {
       }, 1000);
     });
   });
+
+  describe('use count restrict', () => {
+    it('shold return true at first 2 times, and return false at last time', () => {
+      let result = checker.checkAndSet('count', 1000, { maxCount: 3 });
+      assert.equal(result, true);
+
+      result = checker.checkAndSet('count', 1000, { maxCount: 3 });
+      assert.equal(result, true);
+
+      result = checker.checkAndSet('count', 1000, { maxCount: 3 });
+      assert.equal(result, false);
+    });
+  });
 });
