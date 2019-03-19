@@ -48,19 +48,25 @@ class Checker {
         key,
         expire: Date.now() + ttl,
         count: 1,
+        clearCount: 1,
         maxCount: options && options.maxCount,
       });
     } else {
       item.expire = Date.now() + ttl;
       item.count = 1;
+      item.clearCount += 1;
       item.maxCount = options && options.maxCount;
     }
 
     if (!this[sClearTimer]) {
       this[sClearTimer] = setInterval(() => {
         if (this[sStore].length > 0) {
+          this[sStore].forEach((e) => {
+            e.clearCount -= 1;
+          });
+
           // remove expired items.
-          this[sStore] = this[sStore].filter(x => x.expire > Date.now());
+          this[sStore] = this[sStore].filter(e => (e.expire > Date.now() && e.clearCount > 0));
         } else {
           // stop timer when the items list was empty.
           clearInterval(this[sClearTimer]);
