@@ -61,12 +61,12 @@ class Checker {
     if (!this[sClearTimer]) {
       this[sClearTimer] = setInterval(() => {
         if (this[sStore].length > 0) {
+          // remove expired items.
+          this[sStore] = this[sStore].filter(e => (e.expire > Date.now() && e.clearCount > 0));
+
           this[sStore].forEach((e) => {
             e.clearCount -= 1;
           });
-
-          // remove expired items.
-          this[sStore] = this[sStore].filter(e => (e.expire > Date.now() && e.clearCount > 0));
         } else {
           // stop timer when the items list was empty.
           clearInterval(this[sClearTimer]);
