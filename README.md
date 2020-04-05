@@ -5,9 +5,9 @@ A simple and light repeat operation checker.
 ## Getting Start
 
 ```js
-const Checker = require('repeat-checker');
+const { MemoryChecker } = require('repeat-checker');
 
-const checker = new Checker();
+const checker = new MemoryChecker();
 
 function () {
   if (!checker.checkAndSet('somekey', 1000)) {
