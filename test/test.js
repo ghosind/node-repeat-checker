@@ -1,8 +1,8 @@
 const assert = require('assert');
 
-const Checker = require('../index');
+const { MemoryChecker } = require('../dist');
 
-const checker = new Checker({ clearTime: 1000 });
+const checker = new MemoryChecker({ clearTime: 1 });
 
 describe('Repeat Checker', () => {
   describe('pass an empty key', () => {
