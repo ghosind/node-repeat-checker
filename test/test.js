@@ -1,31 +1,23 @@
 const assert = require('assert');
 
-const { MemoryChecker } = require('../dist');
+const { MemoryChecker } = require('../dist/index');
 
-const checker = new MemoryChecker({ clearTime: 1 });
+const checker = new MemoryChecker({ interval: 1 });
 
 describe('Repeat Checker', () => {
   describe('pass an empty key', () => {
     it('should throw TypeError', () => {
-      let errored = 0;
-      try {
+      assert.throws(() => {
         checker.checkAndSet('', 1000);
-      } catch (err) {
-        errored = 1;
-      }
-      assert.equal(errored, 1);
+      }, 'should throw TypeError');
     });
   });
 
   describe('pass an negative ttl', () => {
     it('should throw TypeError', () => {
-      let errored = 0;
-      try {
+      assert.throws(() => {
         checker.checkAndSet('ttl', -1);
-      } catch (err) {
-        errored = 1;
-      }
-      assert.equal(errored, 1);
+      }, 'should throw TypeError');
     });
   });
 

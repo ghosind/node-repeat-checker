@@ -1,28 +1,35 @@
 // eslint-disable-next-line no-unused-vars
-import { BaseChecker, CheckerOption } from './base';
+import { BaseChecker } from './base';
+
+export interface MemoryCheckerOptions {
+  interval: number;
+}
 
 export interface MemoryJob {
-  count: number;
+  clearFlag: boolean;
 
-  clearCount: number;
+  count: number;
 
   expired: number;
 
   maxCount: number;
 }
 
-interface CheckOptions {
+export interface CheckOptions {
   maxCount?: number;
 }
 
 export class MemoryChecker extends BaseChecker {
+  private interval: number;
+
   private storage: Map<string, MemoryJob>;
 
   private timerId: NodeJS.Timeout | null;
 
-  constructor(options?: CheckerOption) {
-    super(options);
+  constructor(options?: MemoryCheckerOptions) {
+    super();
 
+    this.interval = options?.interval || 60; // 1 minute
     this.storage = new Map();
     this.timerId = null;
   }
@@ -52,13 +59,13 @@ export class MemoryChecker extends BaseChecker {
       this.storage.set(key, {
         expired: Date.now() + ttl,
         count: 1,
-        clearCount: 1,
+        clearFlag: false,
         maxCount: options?.maxCount || 1,
       });
     } else {
       item.expired = Date.now() + ttl;
       item.count = 1;
-      item.clearCount += 1;
+      item.clearFlag = false;
       item.maxCount = options?.maxCount || 1;
     }
 
@@ -66,11 +73,15 @@ export class MemoryChecker extends BaseChecker {
       this.timerId = setInterval(() => {
         if (this.storage.size > 0) {
           this.storage.forEach((job: MemoryJob, jobKey: string) => {
-            if (job.expired < Date.now() && job.clearCount <= 0) {
+            if (job.expired >= Date.now()) {
+              return;
+            }
+
+            if (job.clearFlag) {
               this.storage.delete(jobKey);
             } else {
               // eslint-disable-next-line no-param-reassign
-              job.clearCount -= 1;
+              job.clearFlag = true;
             }
           });
         } else if (this.timerId) {
@@ -78,7 +89,7 @@ export class MemoryChecker extends BaseChecker {
           clearInterval(this.timerId);
           this.timerId = null;
         }
-      }, this.clearTime * 1000);
+      }, this.interval * 1000);
     }
 
     return true;
