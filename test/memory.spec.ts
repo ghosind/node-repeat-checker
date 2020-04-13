@@ -1,6 +1,7 @@
-const assert = require('assert');
+/* eslint-disable no-undef */
+import assert from 'assert';
 
-const { MemoryChecker } = require('../dist/index');
+import { MemoryChecker } from '../dist/index';
 
 const checker = new MemoryChecker({ interval: 1 });
 
@@ -29,7 +30,7 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key2 twice', () => {
-    it('shold return true and false', () => {
+    it('should return true and false', () => {
       // set first time
       let result = checker.checkAndSet('key2', 1000);
       assert.equal(result, true);
@@ -41,7 +42,7 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key3 and key 4 once', () => {
-    it('shold both return true', () => {
+    it('should both return true', () => {
       let result = checker.checkAndSet('key3', 1000);
       assert.equal(result, true);
 
@@ -51,7 +52,7 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key5 twice between 1s and ttl is 1.5s', () => {
-    it('shold return true and false', (done) => {
+    it('should return true and false', (done) => {
       let result = checker.checkAndSet('key5', 1500);
       assert.equal(result, true);
 
@@ -64,7 +65,7 @@ describe('Repeat Checker', () => {
   });
 
   describe('set key6 twice between 1s and ttl is 0.5s', () => {
-    it('shold both return true', (done) => {
+    it('should both return true', (done) => {
       let result = checker.checkAndSet('key6', 500);
       assert.equal(result, true);
 
@@ -77,7 +78,7 @@ describe('Repeat Checker', () => {
   });
 
   describe('use count restrict', () => {
-    it('shold return true at first 2 times, and return false at last time', () => {
+    it('should return true at first 2 times, and return false at last time', () => {
       let result = checker.checkAndSet('count', 1000, { maxCount: 3 });
       assert.equal(result, true);
 
