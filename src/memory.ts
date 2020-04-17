@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import { BaseChecker } from './base';
 
-export interface MemoryCheckerOptions {
+interface MemoryCheckerOptions {
   interval: number;
 }
 
-export interface MemoryJob {
+interface MemoryJob {
   clearFlag: boolean;
 
   count: number;
@@ -15,7 +15,7 @@ export interface MemoryJob {
   maxCount: number;
 }
 
-export interface CheckOptions {
+interface CheckOptions {
   maxCount?: number;
 }
 
@@ -49,7 +49,7 @@ export class MemoryChecker extends BaseChecker {
     if (item && item.expired > Date.now()) {
       if (item.maxCount > 0) {
         item.count += 1;
-        return item.count < item.maxCount;
+        return item.count <= item.maxCount;
       }
 
       return false;
@@ -73,7 +73,7 @@ export class MemoryChecker extends BaseChecker {
       this.timerId = setInterval(() => {
         if (this.storage.size > 0) {
           this.storage.forEach((job: MemoryJob, jobKey: string) => {
-            if (job.expired >= Date.now()) {
+            if (job.expired > Date.now()) {
               return;
             }
 

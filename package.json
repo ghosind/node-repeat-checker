@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ghosind/node-repeat-checker#readme",
   "devDependencies": {
+    "@types/ioredis": "^4.14.9",
     "@types/node": "^13.11.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
@@ -33,5 +34,8 @@
     "eslint-plugin-import": "^2.20.2",
     "mocha": "^7.1.1",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "ioredis": "^4.16.2"
   }
 }
