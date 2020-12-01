@@ -1,6 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies, no-unused-vars
-import IORedis from 'ioredis';
-
 import { BaseChecker } from './base';
 
 interface RedisCheckerOption {
@@ -14,24 +11,25 @@ interface CheckOption {
 }
 
 export class RedisChecker extends BaseChecker {
-  private client: IORedis.Redis;
+  private client: any;
 
   private checkScript: string = `
-  if redis.call("get", KEYS[1]) > ARGV[2]
+  if redis.call("get", KEYS[1]) >= ARGV[2]
   then
-    return 0
+    return 1
   end
 
   redis.call("incr", KEYS[1])
   redis.call("expires", KEYS[1], ARGV[1])
 
-  return 1
+  return 0
   `
 
   constructor(options?: RedisCheckerOption) {
     super();
 
-    // eslint-disable-next-line global-require, import/no-extraneous-dependencies, no-shadow
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line import/no-unresolved, global-require, import/no-extraneous-dependencies
     const IORedis = require('ioredis');
     if (!IORedis) {
       throw new Error('Please install ioredis first. (npm install ioredis)');
@@ -63,7 +61,6 @@ export class RedisChecker extends BaseChecker {
 
     return new Promise(
       (resolve: (value: any) => void, reject: (value: any) => void) => {
-      // @ts-ignore
         this.client.check(
           key,
           ttl,
@@ -72,7 +69,7 @@ export class RedisChecker extends BaseChecker {
             if (err) {
               return reject(err);
             }
-            return resolve(!!result);
+            return resolve(!result);
           },
         );
       },
